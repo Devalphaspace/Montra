@@ -1,8 +1,13 @@
+import 'dart:developer';
+
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:montra/Auth/auth.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
+import 'package:montra/Screens/AuthScreen/login_screen.dart';
 import 'package:montra/Screens/AuthScreen/verification_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -18,6 +23,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
   bool checkValue = false;
+  Future? user;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -59,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 PrimaryTextFormField(
-                  nameController: nameController,
+                  textEditingController: nameController,
                   fieldName: 'Name',
                   isObscure: false,
                   validator: (value) {
@@ -71,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 24),
                 PrimaryTextFormField(
-                  nameController: emailController,
+                  textEditingController: emailController,
                   fieldName: 'Email',
                   isObscure: false,
                   validator: (value) {
@@ -85,7 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 24),
                 PrimaryTextFormField(
-                  nameController: passwordController,
+                  textEditingController: passwordController,
                   fieldName: 'Password',
                   isObscure: true,
                   validator: (value) {
@@ -160,7 +167,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     setState(() {
                       if (_formKey.currentState!.validate() &&
                           checkValue == true) {
-                        Get.to(() => const VerificationScreen());
+                        try {
+                          user = createUser(
+                          email: emailController.text,
+                          password: passwordController.text,
+                          name: nameController.text,
+                        );
+                        if (user != null) {
+                          log(user.toString());
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.done),
+                              SizedBox(width: 16),
+                              Text("Account created successfully! Login to your account")
+                            ],
+                          )));
+                          Get.to(() => const LoginScreen());
+                        }
+                        } on AppwriteException catch (e) {
+                          log(e.toString());
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar( SnackBar(
+                                  content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.done),
+                              const SizedBox(width: 16),
+                              Text(e.toString())
+                            ],
+                          )));
+                        } catch (e) {
+                          log(e.toString());
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar( SnackBar(
+                                  content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.done),
+                              const SizedBox(width: 16),
+                              Text(e.toString())
+                            ],
+                          )));
+                        }
                       }
                     });
                   },

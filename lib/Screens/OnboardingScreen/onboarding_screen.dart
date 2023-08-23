@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:montra/Constants/constants.dart';
+import 'package:montra/Screens/AuthScreen/login_screen.dart';
 import 'package:montra/Screens/AuthScreen/signup_screen.dart';
 
 import '../../Constants/shared.dart';
@@ -137,7 +138,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   const SizedBox(height: 16),
                   SecondaryElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        Get.to(
+                          () => const LoginScreen(),
+                        );
+                      });
+                    },
                     buttonName: 'Login',
                   ),
                 ],

@@ -123,13 +123,13 @@ class _CustomOutlinedButtonState extends State<CustomOutlinedButton> {
 
 
 class PrimaryTextFormField extends StatefulWidget {
-  final TextEditingController nameController;
+  final TextEditingController textEditingController;
   final String fieldName;
   final bool isObscure;
   String? Function(String?)? validator;
   PrimaryTextFormField({
     super.key,
-    required this.nameController,
+    required this.textEditingController,
     required this.fieldName,
     required this.isObscure,
     required this.validator,
@@ -151,7 +151,7 @@ class _PrimaryTextFormFieldState extends State<PrimaryTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: widget.nameController,
+      controller: widget.textEditingController,
       obscureText: isObscure,
       validator: widget.validator,
       decoration: InputDecoration(
