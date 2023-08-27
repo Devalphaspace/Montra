@@ -57,6 +57,14 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+android:
+  custom_scheme:
+    scheme: "montra"
+ios:
+  custom_scheme:
+    scheme: "montra"
+
+    
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -69,6 +77,8 @@ flutter:
     - assets/images/
     - assets/icons/
   #   - images/a_dot_ham.jpeg
+
+  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

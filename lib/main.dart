@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:montra/Screens/OnboardingScreen/onboarding_screen.dart';
+import 'package:montra/Auth/auth.dart';
+import 'package:montra/Screens/AuthScreen/security_check_screen.dart';
 
 void main() {
   runApp(const MyApp());
+  setupDeepLinkingHandler();
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
         fontFamily: GoogleFonts.inter().fontFamily,
       ),
-      home: const OnboardingScreen(),
+      home: const SecurityCheckScreen(),
     );
   }
 }

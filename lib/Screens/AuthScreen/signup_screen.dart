@@ -2,13 +2,13 @@ import 'dart:developer';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:montra/Auth/auth.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
 import 'package:montra/Screens/AuthScreen/login_screen.dart';
-import 'package:montra/Screens/AuthScreen/verification_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -24,6 +24,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   bool checkValue = false;
   Future? user;
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -169,30 +171,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           checkValue == true) {
                         try {
                           user = createUser(
-                          email: emailController.text,
-                          password: passwordController.text,
-                          name: nameController.text,
-                        );
-                        if (user != null) {
-                          log(user.toString());
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                                  content: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.done),
-                              SizedBox(width: 16),
-                              Text("Account created successfully! Login to your account")
-                            ],
-                          )));
-                          Get.to(() => const LoginScreen());
-                        }
+                            email: emailController.text,
+                            password: passwordController.text,
+                            name: nameController.text,
+                          );
+                          if (user != null) {
+                            log(user.toString());
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                                    content: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.done),
+                                SizedBox(width: 16),
+                                Text(
+                                    "Account created successfully! Login to your account")
+                              ],
+                            )));
+                            Get.to(() => const LoginScreen());
+                          }
                         } on AppwriteException catch (e) {
                           log(e.toString());
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar( SnackBar(
-                                  content: Row(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -203,9 +205,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           )));
                         } catch (e) {
                           log(e.toString());
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar( SnackBar(
-                                  content: Row(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [

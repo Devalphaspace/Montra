@@ -9,7 +9,7 @@ import 'package:montra/Auth/auth.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
 import 'package:montra/Screens/AuthScreen/forgot_password_screen.dart';
-import 'package:montra/Screens/AuthScreen/security_check_screen.dart';
+import 'package:montra/Screens/AuthScreen/verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -119,8 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           );
-                          Get.offAll(
-                            () => const SecurityCheckScreen(),
+                          Get.to(
+                            () => const VerificationScreen(),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

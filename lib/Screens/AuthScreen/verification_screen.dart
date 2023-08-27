@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 
+import '../../Auth/auth.dart';
 import '../../Constants/constants.dart';
 
 class VerificationScreen extends StatefulWidget {
@@ -14,6 +15,12 @@ class VerificationScreen extends StatefulWidget {
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
+  @override
+  void initState() {
+    sendVerificationEmail();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
