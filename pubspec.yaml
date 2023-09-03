@@ -41,6 +41,11 @@ dependencies:
   blurrycontainer: ^1.0.2
   flutter_svg: ^2.0.7
   pinput: ^2.2.31
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  lottie: ^2.6.0
+  iconsax: ^0.0.8
+  fluttertoast: ^8.2.2
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +81,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/json/
   #   - images/a_dot_ham.jpeg
 
   

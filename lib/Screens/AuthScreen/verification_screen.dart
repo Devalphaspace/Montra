@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pinput/pinput.dart';
 
 import '../../Auth/auth.dart';
 import '../../Constants/constants.dart';
@@ -61,7 +60,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 color: dark,
               ),
             ),
-            Pinput(),
             const Spacer(),
           ],
         ),

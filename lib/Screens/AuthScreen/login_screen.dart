@@ -106,6 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         if (session != null) {
                           log(session.toString());
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Row(
@@ -123,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             () => const VerificationScreen(),
                           );
                         } else {
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Row(

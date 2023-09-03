@@ -4,6 +4,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_web_auth_2 (1.1.1):
     - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -11,6 +14,7 @@ PODS:
     - FlutterMacOS
   - smart_auth (0.0.1):
     - Flutter
+  - Toast (4.0.0)
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -18,10 +22,15 @@ DEPENDENCIES:
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - smart_auth (from `.symlinks/plugins/smart_auth/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Toast
 
 EXTERNAL SOURCES:
   device_info_plus:
@@ -30,6 +39,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_web_auth_2:
     :path: ".symlinks/plugins/flutter_web_auth_2/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -43,9 +54,11 @@ SPEC CHECKSUMS:
   device_info_plus: 7545d84d8d1b896cb16a4ff98c19f07ec4b298ea
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_web_auth_2: a1bc00762c408a8f80b72a538cd7ff5b601c3e71
+  fluttertoast: fafc4fa4d01a6a9e4f772ecd190ffa525e9e2d9c
   package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   smart_auth: 4bedbc118723912d0e45a07e8ab34039c19e04f2
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
