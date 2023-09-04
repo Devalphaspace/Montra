@@ -126,8 +126,8 @@ class PrimaryTextFormField extends StatefulWidget {
   final TextEditingController textEditingController;
   final String fieldName;
   final bool isObscure;
-  String? Function(String?)? validator;
-  PrimaryTextFormField({
+  final String? Function(String?)? validator;
+  const PrimaryTextFormField({
     super.key,
     required this.textEditingController,
     required this.fieldName,
