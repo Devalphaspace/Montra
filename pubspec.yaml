@@ -46,6 +46,13 @@ dependencies:
   lottie: ^2.6.0
   iconsax: ^0.0.8
   fluttertoast: ^8.2.2
+  intl: ^0.18.1
+  fl_chart: ^0.63.0
+  animated_bottom_navigation_bar: ^1.2.0
+  animated_notch_bottom_bar: ^1.0.0
+  dotted_border: ^2.0.0+3
+  flutter_speed_dial: ^7.0.0
+  image_picker: ^1.0.4
 
 dev_dependencies:
   flutter_test:

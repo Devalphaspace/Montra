@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:montra/Screens/AuthScreen/security_check_screen.dart';
+import 'package:montra/Screens/PageNavigator/page_navigator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
         fontFamily: GoogleFonts.inter().fontFamily,
       ),
-      home: const SecurityCheckScreen(),
+      home: const PageNavigator(),
     );
   }
 }

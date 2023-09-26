@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -122,6 +123,51 @@ class _CustomOutlinedButtonState extends State<CustomOutlinedButton> {
     );
   }
 }
+
+class DashedBorderButton extends StatelessWidget {
+  final Function()? onTap;
+  final String buttonName;
+  const DashedBorderButton({
+    super.key,
+    required this.buttonName,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: DottedBorder(
+        borderType: BorderType.RRect,
+        dashPattern: const [8, 8],
+        radius: const Radius.circular(16),
+        color: light20,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Transform.rotate(
+              angle: -45,
+              child: Icon(
+                Icons.attachment_rounded,
+                color: light20,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              buttonName,
+              style: title3.copyWith(color: light20),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class PrimaryTextFormField extends StatefulWidget {
   final TextEditingController textEditingController;

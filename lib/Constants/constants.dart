@@ -80,3 +80,34 @@ TextStyle titlex = GoogleFonts.inter(
   fontSize: 64,
   height: 80,
 );
+
+List<String> expenseCategory = [
+  'Category',
+  'Shopping',
+  'Food',
+  'Subscription',
+  'Grocery',
+  'Rent',
+];
+
+List<String> expenseFrom = [
+  'Wallet',
+  'Cash',
+  'Bank Account',
+  'Credit Card',
+];
+
+List<String> months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
