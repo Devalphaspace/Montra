@@ -3,13 +3,14 @@ import 'dart:developer';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:montra/Auth/auth.dart';
+import 'package:montra/Controller/session_controller.dart';
+import 'package:montra/Screens/AuthScreen/security_check_screen.dart';
+import 'package:montra/Services/auth.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
 import 'package:montra/Screens/AuthScreen/forgot_password_screen.dart';
-import 'package:montra/Screens/AuthScreen/verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
   Session? session;
+  final SessionController _sessionController = Get.put(SessionController());
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +35,26 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: light,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: light,
           elevation: 0,
           shadowColor: Colors.transparent,
-          leading: IconButton(
-            onPressed: () {
-              setState(() {
-                Get.back();
-              });
-            },
-            icon: SvgPicture.asset(
-              'assets/icons/arrow_left.svg',
-              theme: SvgTheme(
-                currentColor: dark50,
-              ),
-            ),
-          ),
+          // leading: IconButton(
+          //   onPressed: () {
+          //     setState(() {
+          //       Get.back();
+          //     });
+          //   },
+          //   icon: SvgPicture.asset(
+          //     'assets/icons/arrow_left.svg',
+          //     theme: SvgTheme(
+          //       currentColor: dark50,
+          //     ),
+          //   ),
+          // ),
           centerTitle: true,
           title: const Text('Login'),
         ),
@@ -120,9 +124,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           );
-                          Get.to(
-                            () => const VerificationScreen(),
-                          );
+
+                          _sessionController
+                              .initializeSessionID(
+                                  passedSessionID: session!.$id)
+                              .then((value) {
+                            Get.to(
+                              () => SecurityCheckScreen(
+                                userID: session!.userId,
+                                sessionID: session!.$id,
+                              ),
+                            );
+                          }).onError((error, stackTrace) {
+                            Fluttertoast.showToast(
+                                msg:
+                                    'Something went wrong. Please try again after some time!');
+                          });
                         } else {
                           // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(

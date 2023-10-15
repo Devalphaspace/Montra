@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Screens/AccountSetup/setup_account_screen.dart';
-import 'package:montra/Screens/Home/home_screen.dart';
+import 'package:montra/Screens/PageNavigator/page_navigator.dart';
 
 class PrimaryElevatedButton extends StatefulWidget {
   final Function()? onPressed;
@@ -124,6 +126,65 @@ class _CustomOutlinedButtonState extends State<CustomOutlinedButton> {
   }
 }
 
+class CustomSquareOutlinedButton extends StatefulWidget {
+  final Function() onPressed;
+  final IconData iconData;
+  final String buttonName;
+  final double? size;
+  const CustomSquareOutlinedButton({
+    super.key,
+    required this.onPressed,
+    required this.iconData,
+    required this.buttonName,
+    this.size,
+  });
+
+  @override
+  State<CustomSquareOutlinedButton> createState() =>
+      _CustomSquareOutlinedButtonState();
+}
+
+class _CustomSquareOutlinedButtonState
+    extends State<CustomSquareOutlinedButton> {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: widget.onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(
+          widget.size != null ? widget.size! : Get.width * 0.3,
+          widget.size != null ? widget.size! : Get.width * 0.3,
+        ),
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: light20,
+              width: 1,
+            )),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            widget.iconData,
+            color: dark50,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            widget.buttonName,
+            style: title3.copyWith(color: dark50),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class DashedBorderButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonName;
@@ -167,7 +228,6 @@ class DashedBorderButton extends StatelessWidget {
     );
   }
 }
-
 
 class PrimaryTextFormField extends StatefulWidget {
   final TextEditingController textEditingController;
@@ -380,9 +440,13 @@ primaryFlutterToast({required String msg}) {
 
 class DoneScreen extends StatefulWidget {
   final int routeNo;
+  final String userID;
+  final String sessionID;
   const DoneScreen({
     super.key,
     required this.routeNo,
+    required this.userID,
+    required this.sessionID,
   });
 
   @override
@@ -395,7 +459,10 @@ class _DoneScreenState extends State<DoneScreen> {
     Future.delayed(
       const Duration(seconds: 2),
       () {
-        Navigator.of(context).push(_doneRoute(routeNo: widget.routeNo));
+        Navigator.of(context).push(_doneRoute(
+            routeNo: widget.routeNo,
+            userID: widget.userID,
+            sessionID: widget.sessionID));
       },
     );
     super.initState();
@@ -418,11 +485,24 @@ class _DoneScreenState extends State<DoneScreen> {
   }
 }
 
-Route _doneRoute({required int routeNo}) {
+Route _doneRoute({
+  required int routeNo,
+  required String userID,
+  required String sessionID,
+}) {
   return PageRouteBuilder(
     transitionDuration: const Duration(milliseconds: 500),
     pageBuilder: (context, animation, secondaryAnimation) =>
-        routeNo == 0 ? const SetupAccountScreen() : const HomeScreen(),
+        // IF ROUTE NUMBER IS NOT 0 PASS THE USERID
+        routeNo == 0
+            ? SetupAccountScreen(
+                userID: userID,
+                sessionID: sessionID,
+              )
+            : PageNavigator(
+                userID: userID,
+                sessionID: sessionID,
+              ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(
         opacity: animation,
@@ -430,4 +510,114 @@ Route _doneRoute({required int routeNo}) {
       );
     },
   );
+}
+
+class TransactionCards extends StatelessWidget {
+  final IconData transactionCardIcon;
+  final String transactionCardName;
+  final String transactionCardDesc;
+  final String transactionCardAmount;
+  final DateTime transactionCardTime;
+  const TransactionCards({
+    super.key,
+    required this.transactionCardIcon,
+    required this.transactionCardName,
+    required this.transactionCardDesc,
+    required this.transactionCardAmount,
+    required this.transactionCardTime,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height * 0.1,
+      width: Get.width,
+      decoration: BoxDecoration(
+        color: light80,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 56,
+            width: 56,
+            decoration: BoxDecoration(
+              color: yellow20,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(
+              transactionCardIcon,
+              color: yellow,
+              size: 36,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Padding(
+            padding: const EdgeInsets.only(left: 6.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: Get.width * 0.4,
+                  child: Text(
+                    transactionCardName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: dark25,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: Get.width * 0.4,
+                  child: Text(
+                    transactionCardDesc,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: light20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(right: 6.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '-\$$transactionCardAmount',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: red,
+                  ),
+                ),
+                Text(
+                  DateFormat("hh:mm a").format(transactionCardTime).toString(),
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: light20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

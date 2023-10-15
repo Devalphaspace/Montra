@@ -6,7 +6,13 @@ import 'package:montra/Constants/shared.dart';
 import 'package:montra/Screens/AccountSetup/add_new_bank_account_screen.dart';
 
 class SetupAccountScreen extends StatefulWidget {
-  const SetupAccountScreen({super.key});
+  final String userID;
+  final String sessionID;
+  const SetupAccountScreen({
+    super.key,
+    required this.userID,
+    required this.sessionID,
+  });
 
   @override
   State<SetupAccountScreen> createState() => _SetupAccountScreenState();
@@ -46,7 +52,10 @@ class _SetupAccountScreenState extends State<SetupAccountScreen> {
               PrimaryElevatedButton(
                 onPressed: () {
                   setState(() {
-                    Navigator.of(context).push(_createRoute());
+                    Navigator.of(context).push(_createRoute(
+                      userID: widget.userID,
+                      sessionID: widget.sessionID,
+                    ));
                   });
                 },
                 buttonName: "Let's go",
@@ -59,17 +68,20 @@ class _SetupAccountScreenState extends State<SetupAccountScreen> {
   }
 }
 
-Route _createRoute() {
+Route _createRoute({
+  required String userID,
+  required String sessionID,
+}) {
   return PageRouteBuilder(
     transitionDuration: const Duration(milliseconds: 500),
     pageBuilder: (context, animation, secondaryAnimation) =>
-        const AddNewBankAccountScreen(),
+        AddNewBankAccountScreen(
+      userID: userID,
+      sessionID: sessionID,
+    ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-
-
       return FadeTransition(
         opacity: animation,
-        
         child: child,
       );
     },

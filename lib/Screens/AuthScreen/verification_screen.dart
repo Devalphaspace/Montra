@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../Auth/auth.dart';
+import '../../Services/auth.dart';
 import '../../Constants/constants.dart';
 
 class VerificationScreen extends StatefulWidget {

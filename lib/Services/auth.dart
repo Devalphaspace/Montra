@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:montra/git_ignore.dart';
 
@@ -13,7 +14,7 @@ Client client = Client()
 
 final account = Account(client);
 
-createUser(
+Future<User> createUser(
     {required String email,
     required String password,
     required String name}) async {
@@ -34,6 +35,7 @@ Future<Session?> loginSession(
       email: email,
       password: password,
     );
+
     return session;
   } on AppwriteException catch (e) {
     log('Exception caught: $e');
@@ -42,6 +44,16 @@ Future<Session?> loginSession(
     log('Exception caught: $e');
     return null;
   }
+}
+
+Future<Session?> getSession({required String sessionID}) async {
+  try {
+    final session = await account.getSession(sessionId: sessionID);
+    return session;
+  } catch (e) {
+    Fluttertoast.showToast(msg: 'Something went wrong. Please try again!');
+  }
+  return null;
 }
 
 void sendVerificationEmail() async {
@@ -68,4 +80,14 @@ void setupDeepLinkingHandler() {
       }
     },
   );
+}
+
+Future<bool> signOut({required String sessionID}) async {
+  try {
+    account.deleteSession(sessionId: sessionID);
+    return true;
+  } catch (e) {
+    log(e.toString());
+  }
+  return false;
 }

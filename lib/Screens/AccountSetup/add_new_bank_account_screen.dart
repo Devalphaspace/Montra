@@ -3,9 +3,16 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
+import 'dart:io';
 
 class AddNewBankAccountScreen extends StatefulWidget {
-  const AddNewBankAccountScreen({super.key});
+  final String userID;
+  final String sessionID;
+  const AddNewBankAccountScreen({
+    super.key,
+    required this.userID,
+    required this.sessionID,
+  });
 
   @override
   State<AddNewBankAccountScreen> createState() =>
@@ -44,7 +51,7 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
     'assets/icons/yes.png',
   ];
 
-  double popUpHeight = (Get.height * 0.3);
+  double popUpHeight = Platform.isIOS ? (Get.height * 0.3) : (Get.height * 0.4);
 
   String dropDownValue = 'Account Type';
 
@@ -284,12 +291,10 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
                                       setState(() {
                                         dropDownValue = value!;
                                         if (value != 'Account Type') {
-                                          popUpHeight = (Get.height * 0.5) *
-                                              animation.value;
+                                           popUpHeight = Platform.isIOS ? (Get.height * 0.5) * animation.value : (Get.height * 0.6) * animation.value;
                                           slideAnimationController.forward();
                                         } else {
-                                          popUpHeight = (Get.height * 0.3) *
-                                              animation.value;
+                                          popUpHeight = Platform.isIOS ? (Get.height * 0.3) * animation.value : (Get.height * 0.4) * animation.value;
                                           slideAnimationController.reverse();
                                         }
                                       });
@@ -355,7 +360,11 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
                                             'Account Type'
                                                 .trim()
                                                 .toLowerCase()) {
-                                      Get.offAll(const DoneScreen(routeNo: 1));
+                                      Get.offAll(() => DoneScreen(
+                                            routeNo: 1,
+                                            userID: widget.userID,
+                                            sessionID: widget.sessionID,
+                                          ));
                                     } else {
                                       primaryFlutterToast(
                                           msg: 'Please select Account Type!');

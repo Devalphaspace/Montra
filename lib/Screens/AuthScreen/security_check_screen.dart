@@ -8,13 +8,17 @@ import 'package:lottie/lottie.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
 import 'package:montra/Controller/pin_controller.dart';
-import 'package:montra/Screens/Home/home_screen.dart';
+import 'package:montra/Screens/PageNavigator/page_navigator.dart';
 
 class SecurityCheckScreen extends StatefulWidget {
   final int isFirstLoggedIn;
+  final String userID;
+  final String sessionID;
   const SecurityCheckScreen({
     super.key,
     this.isFirstLoggedIn = 1,
+    required this.userID,
+    required this.sessionID,
     /* isFirstLoggedIn == 0 MEANS FIRST TIME LOGGED [NEW USER TO THIS APP] IN 
     isFirstLoggedIn == 1 MEANS USER IS ALREADY LOGGED IN JUST NEED TO PUT THE 
     SECURITY PIN isFirstLoggedIn == 2 MEANS USER IS NOT LOGGED IN BUT HE HAS 
@@ -645,8 +649,10 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
                                     .then((value) {
                                   setState(() {
                                     Get.offAll(
-                                      () => const DoneScreen(
+                                      () => DoneScreen(
                                         routeNo: 0,
+                                        userID: widget.userID,
+                                        sessionID: widget.sessionID,
                                       ),
                                     );
                                   });
@@ -665,7 +671,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
               );
             } else if (widget.isFirstLoggedIn == 2) {
               Get.offAll(
-                () => const HomeScreen(),
+                () => PageNavigator(userID: widget.userID, sessionID: widget.sessionID,),
               );
             }
 
@@ -1218,7 +1224,7 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
                                       if (value == true) {
                                         setState(() {
                                           Get.offAll(
-                                            () => const HomeScreen(),
+                                            () => PageNavigator(userID: widget.userID, sessionID: widget.sessionID,),
                                           );
                                         });
                                       } else {
@@ -1780,8 +1786,10 @@ class _SecurityCheckScreenState extends State<SecurityCheckScreen> {
                                         .then((value) {
                                       setState(() {
                                         Get.offAll(
-                                          () => const DoneScreen(
+                                          () => DoneScreen(
                                             routeNo: 0,
+                                            userID: widget.userID,
+                                            sessionID: widget.sessionID,
                                           ),
                                         );
                                       });

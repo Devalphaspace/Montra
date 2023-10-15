@@ -53,6 +53,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   flutter_speed_dial: ^7.0.0
   image_picker: ^1.0.4
+  random_avatar: ^0.0.8
 
 dev_dependencies:
   flutter_test:

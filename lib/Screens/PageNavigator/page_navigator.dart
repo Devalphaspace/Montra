@@ -8,9 +8,16 @@ import 'package:montra/Constants/constants.dart';
 import 'package:montra/Screens/Home/expense_screen.dart';
 import 'package:montra/Screens/Home/home_screen.dart';
 import 'package:montra/Screens/Home/income_screen.dart';
+import 'package:montra/Screens/Profile/profile_screen.dart';
 
 class PageNavigator extends StatefulWidget {
-  const PageNavigator({super.key});
+  final String userID;
+  final String sessionID;
+  const PageNavigator({
+    super.key,
+    required this.userID,
+    required this.sessionID,
+  });
 
   @override
   State<PageNavigator> createState() => _PageNavigatorState();
@@ -43,12 +50,16 @@ class _PageNavigatorState extends State<PageNavigator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const IndexedStack(
+      body: IndexedStack(
+        index: _bottomNavIndex,
         children: [
-          HomeScreen(),
-          HomeScreen(),
-          HomeScreen(),
-          HomeScreen(),
+          HomeScreen(userID: widget.userID),
+          HomeScreen(userID: widget.userID),
+          HomeScreen(userID: widget.userID),
+          ProfileScreen(
+            userID: widget.userID,
+            sessionID: widget.sessionID,
+          ),
         ],
       ),
       floatingActionButton: SpeedDial(
