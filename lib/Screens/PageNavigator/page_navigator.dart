@@ -31,7 +31,7 @@ class _PageNavigatorState extends State<PageNavigator> {
     Iconsax.user_octagon,
   ];
 
-  int _bottomNavIndex = 0;
+  int _bottomNavIndex = 1;
 
   var renderOverlay = true;
   var visible = true;
@@ -123,7 +123,7 @@ class _PageNavigatorState extends State<PageNavigator> {
             foregroundColor: light,
             onTap: () => setState(() {
               rmicons = false;
-              Get.to(() => const ExpenseScreen());
+              Get.to(() => ExpenseScreen(userID: widget.userID));
             }),
           ),
           SpeedDialChild(

@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
 import 'dart:io';
 
 import 'package:montra/Services/database_services.dart';
 
-class AddNewBankAccountScreen extends StatefulWidget {
+class EditBankAccountScreen extends StatefulWidget {
+  final String walletType;
+  final String walletName;
+  final String walletBalance;
+  final String walletID;
   final String userID;
-  final String? sessionID;
-  const AddNewBankAccountScreen({
+  const EditBankAccountScreen({
     super.key,
+    required this.walletType,
+    required this.walletName,
+    required this.walletBalance,
+    required this.walletID,
     required this.userID,
-    this.sessionID,
   });
 
   @override
-  State<AddNewBankAccountScreen> createState() =>
-      _AddNewBankAccountScreenState();
+  State<EditBankAccountScreen> createState() => _EditBankAccountScreenState();
 }
 
-class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
+class _EditBankAccountScreenState extends State<EditBankAccountScreen>
     with TickerProviderStateMixin {
   late AnimationController animationController;
   late AnimationController opacityAnimationController;
@@ -46,10 +51,87 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
   double popUpHeight =
       Platform.isIOS ? (Get.height * 0.35) : (Get.height * 0.45);
 
-  String dropDownValue = 'Account Type';
+  late String dropDownValue;
+
+  void _showDialog({
+    required BuildContext context,
+    required String walletID,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: light,
+          title: Text(
+            "Warning!!",
+            style: title3.copyWith(color: red),
+          ),
+          content: Text(
+            "Are you sure you want to delete this account?",
+            style: body3.copyWith(color: red),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(56),
+                    ),
+                    minimumSize: Size(Get.width * 0.3, 48),
+                    maximumSize: Size(Get.width * 0.3, 48),
+                  ),
+                  child: Text(
+                    'Yes'.toUpperCase(),
+                    style: title3.copyWith(color: light),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    deleteWallet(walletID: walletID).then((value) {
+                      Get.back();
+                    });
+                    Get.back();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(56),
+                      side: BorderSide(
+                        width: 1,
+                        color: violet,
+                      ),
+                    ),
+                    minimumSize: Size(Get.width * 0.3, 48),
+                    maximumSize: Size(Get.width * 0.3, 48),
+                  ),
+                  child: Text(
+                    'cancel'.toUpperCase(),
+                    style: title3.copyWith(color: violet),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
+    nameController.text = widget.walletName;
+    dropDownValue = widget.walletType;
+    numericController.text = widget.walletBalance;
+
     // ANIMATION CONTROLLERS
     animationController = AnimationController(
       vsync: this,
@@ -142,11 +224,25 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
             ),
           ),
           title: Text(
-            'Add new account',
+            'Edit account',
             style: title3.copyWith(color: light),
           ),
           centerTitle: true,
           elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {
+                _showDialog(
+                  context: context,
+                  walletID: widget.walletID,
+                );
+              },
+              icon: Icon(
+                Iconsax.trash,
+                color: light,
+              ),
+            ),
+          ],
         ),
         body: Form(
           key: _formKey,
@@ -159,43 +255,44 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
               children: [
                 const Spacer(),
                 AnimatedBuilder(
-                    animation: opacityAnimation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: opacityAnimation.value,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'Balance',
-                            style: title3.copyWith(
-                              color: light80,
-                            ),
+                  animation: opacityAnimation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: opacityAnimation.value,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Balance',
+                          style: title3.copyWith(
+                            color: light80,
                           ),
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  },
+                ),
                 AnimatedBuilder(
-                    animation: opacityAnimation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: opacityAnimation.value,
-                        child: NumericTextFormField(
-                          textEditingController: numericController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              primaryFlutterToast(
-                                  msg: 'Please enter the Amount');
-                              return '';
-                            }
-                            return null;
-                          },
-                          errorTextStyle: const TextStyle(
-                            fontSize: 0,
-                            color: Colors.transparent,
-                          ),
+                  animation: opacityAnimation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: opacityAnimation.value,
+                      child: NumericTextFormField(
+                        textEditingController: numericController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            primaryFlutterToast(msg: 'Please enter the Amount');
+                            return '';
+                          }
+                          return null;
+                        },
+                        errorTextStyle: const TextStyle(
+                          fontSize: 0,
+                          color: Colors.transparent,
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  },
+                ),
                 const SizedBox(height: 16),
                 AnimatedBuilder(
                   animation: animation,
@@ -319,6 +416,36 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
                                           color: Colors.transparent,
                                         ),
                                       ),
+                                      // GridView.builder(
+                                      //   padding: const EdgeInsets.all(0),
+                                      //   itemCount: bankLogoPaths.length,
+                                      //   shrinkWrap: true,
+                                      //   physics:
+                                      //       const NeverScrollableScrollPhysics(),
+                                      //   gridDelegate:
+                                      //       const SliverGridDelegateWithFixedCrossAxisCount(
+                                      //     crossAxisCount: 4,
+                                      //     childAspectRatio: 1.5,
+                                      //     mainAxisSpacing: 8,
+                                      //     crossAxisSpacing: 8,
+                                      //   ),
+                                      //   itemBuilder: (context, index) {
+                                      //     return Container(
+                                      //       height: 56,
+                                      //       width: 56 * 2,
+                                      //       padding: const EdgeInsets.all(4),
+                                      //       decoration: BoxDecoration(
+                                      //         color: light40,
+                                      //         borderRadius:
+                                      //             BorderRadius.circular(8),
+                                      //       ),
+                                      //       child: Image.asset(
+                                      //         bankLogoPaths[index],
+                                      //         fit: BoxFit.contain,
+                                      //       ),
+                                      //     );
+                                      //   },
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -330,55 +457,23 @@ class _AddNewBankAccountScreenState extends State<AddNewBankAccountScreen>
                                             'Account Type'
                                                 .trim()
                                                 .toLowerCase()) {
-                                      if (widget.sessionID != null) {
-                                        Map<String, dynamic> walletData = {
-                                          "user": widget.userID,
-                                          "walletName": nameController.text,
-                                          "walletAmount":
-                                              numericController.text,
-                                          "walletType": dropDownValue,
-                                        };
-
-                                        createWallet(walletData: walletData)
-                                            .then(
-                                          (value) {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    'Wallet has been created successfully!');
-                                            Get.offAll(
-                                              () => DoneScreen(
-                                                routeNo: 1,
-                                                userID: widget.userID,
-                                                sessionID: widget.sessionID!,
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      } else {
-                                        Map<String, dynamic> walletData = {
-                                          "user": widget.userID,
-                                          "walletName": nameController.text,
-                                          "walletAmount":
-                                              numericController.text,
-                                          "walletType": dropDownValue,
-                                        };
-
-                                        createWallet(walletData: walletData)
-                                            .then(
-                                          (value) {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    'Wallet has been created successfully!');
-                                            Get.back();
-                                          },
-                                        );
-                                      }
+                                      Map<String, dynamic> walletData = {
+                                        'walletName': nameController.text,
+                                        'walletAmount': double.parse(
+                                            numericController.text),
+                                        'walletType': dropDownValue,
+                                      };
+                                      updateWallet(
+                                        walletID: widget.walletID,
+                                        walletData: walletData,
+                                      ).then((value) {});
+                                      Get.back();
                                     } else {
                                       primaryFlutterToast(
                                           msg: 'Please select Account Type!');
                                     }
                                   },
-                                  buttonName: 'Continue',
+                                  buttonName: 'Update',
                                 ),
                               ],
                             ),

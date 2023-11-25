@@ -10,6 +10,7 @@ import 'dart:ui' as ui;
 
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
+import 'package:montra/Screens/AccountSetup/add_new_bank_account_screen.dart';
 import 'package:montra/Screens/Profile/wallet_transactions_screen.dart';
 import 'package:montra/Services/database_services.dart';
 
@@ -191,6 +192,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                     walletBalance: wallets[index]
                                         .data['walletAmount']
                                         .toString(),
+                                    walletType:
+                                        wallets[index].data['walletType'],
+                                    userID: widget.user['userID'],
                                   ),
                                 );
                               },
@@ -281,7 +285,11 @@ class _AccountScreenState extends State<AccountScreen> {
         color: Colors.transparent,
         padding: const EdgeInsets.all(16),
         child: PrimaryElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(
+              () => AddNewBankAccountScreen(userID: widget.user['userID']),
+            );
+          },
           buttonName: '+ Add new wallet',
         ),
       ),

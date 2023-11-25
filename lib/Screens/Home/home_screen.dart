@@ -675,7 +675,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               transactionCardIcon: Iconsax.shopping_bag,
                               transactionCardName:
                                   transactions[transactionIndex]
-                                      .data['category']
+                                      .data['category']['categoryName']
                                       .toString(),
                               transactionCardDesc:
                                   transactions[transactionIndex]

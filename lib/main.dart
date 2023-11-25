@@ -53,8 +53,9 @@ class MyApp extends StatelessWidget {
                               ConnectionState.done &&
                           sessionIDSnapshot.data != null) {
                         return PageNavigator(
-                            userID: sessionIDSnapshot.data!.userId,
-                            sessionID: sessionID,);
+                          userID: sessionIDSnapshot.data!.userId,
+                          sessionID: sessionID,
+                        );
                       } else if (sessionIDSnapshot.connectionState ==
                           ConnectionState.waiting) {
                         return Container(

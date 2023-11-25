@@ -5,17 +5,22 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Constants/shared.dart';
+import 'package:montra/Screens/AccountSetup/edit_bank_account_screen.dart';
 import 'package:montra/Services/database_services.dart';
 
 class WalletTransactionsScreen extends StatefulWidget {
   final String walletName;
   final String walletID;
   final String walletBalance;
+  final String walletType;
+  final String userID;
   const WalletTransactionsScreen({
     super.key,
     required this.walletName,
     required this.walletID,
     required this.walletBalance,
+    required this.walletType,
+    required this.userID,
   });
 
   @override
@@ -49,7 +54,17 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.to(
+                () => EditBankAccountScreen(
+                  walletName: widget.walletName,
+                  walletType: widget.walletType,
+                  walletBalance: widget.walletBalance,
+                  walletID: widget.walletID,
+                  userID: widget.userID,
+                ),
+              );
+            },
             icon: Icon(
               Iconsax.pen_add,
               color: dark50,
@@ -127,7 +142,8 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
                     } else if (transactionSnapshot.connectionState ==
                             ConnectionState.done ||
                         transactionSnapshot.data != null) {
-                      List<Document> transactions = transactionSnapshot.data!.documents;
+                      List<Document> transactions =
+                          transactionSnapshot.data!.documents;
                       return ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -135,10 +151,19 @@ class _WalletTransactionsScreenState extends State<WalletTransactionsScreen> {
                         itemBuilder: (context, transactionIndex) {
                           return TransactionCards(
                             transactionCardIcon: Iconsax.shopping_bag,
-                            transactionCardName: transactions[transactionIndex].data['category'].toString(),
-                            transactionCardDesc: transactions[transactionIndex].data['transactionDescription'].toString(),
-                            transactionCardAmount: transactions[transactionIndex].data['amount'].toString(),
-                            transactionCardTime: DateTime.parse(transactions[transactionIndex].data['datetime']),
+                            transactionCardName: transactions[transactionIndex]
+                                .data['category']['categoryName']
+                                .toString(),
+                            transactionCardDesc: transactions[transactionIndex]
+                                .data['transactionDescription']
+                                .toString(),
+                            transactionCardAmount:
+                                transactions[transactionIndex]
+                                    .data['amount']
+                                    .toString(),
+                            transactionCardTime: DateTime.parse(
+                                transactions[transactionIndex]
+                                    .data['datetime']),
                           );
                         },
                         separatorBuilder: (context, index) =>

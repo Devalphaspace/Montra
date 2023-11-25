@@ -158,8 +158,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       } on AppwriteException catch (e) {
                         log(e.toString());
+                        Fluttertoast.showToast(msg: '${e.message}');
                       } catch (e) {
                         log(e.toString());
+                        Fluttertoast.showToast(msg: '$e');
                       }
                     }
                   },

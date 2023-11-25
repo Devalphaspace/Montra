@@ -9,8 +9,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:montra/Constants/constants.dart';
 import 'package:montra/Controller/session_controller.dart';
 import 'package:montra/Screens/AuthScreen/login_screen.dart';
+import 'package:montra/Screens/Export/export.dart';
 import 'package:montra/Screens/Profile/account_screen.dart';
 import 'package:montra/Screens/Profile/profile_edit_screen.dart';
+import 'package:montra/Screens/Settings/settings.dart';
 import 'package:montra/Services/auth.dart';
 import 'package:montra/Services/database_services.dart';
 import 'package:montra/Services/storage_services.dart';
@@ -230,7 +232,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 36,
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Get.to(() => const SettingsScreen());
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -264,7 +268,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 36,
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Get.to(() => const ExportScreen());
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,

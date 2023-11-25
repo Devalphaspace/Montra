@@ -44,6 +44,50 @@ class _PrimaryElevatedButtonState extends State<PrimaryElevatedButton> {
   }
 }
 
+class PrimaryElevatedIconButton extends StatefulWidget {
+  final Function()? onPressed;
+  final String buttonName;
+  final String iconString;
+  const PrimaryElevatedIconButton({
+    super.key,
+    required this.onPressed,
+    required this.buttonName,
+    required this.iconString,
+  });
+
+  @override
+  State<PrimaryElevatedIconButton> createState() =>
+      _PrimaryElevatedIconButtonState();
+}
+
+class _PrimaryElevatedIconButtonState extends State<PrimaryElevatedIconButton> {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: widget.onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(Get.width, 56),
+        backgroundColor: violet,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset(widget.iconString),
+          const SizedBox(width: 12),
+          Text(
+            widget.buttonName,
+            style: title3.copyWith(color: light80),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class SecondaryElevatedButton extends StatefulWidget {
   final Function()? onPressed;
   final String buttonName;
@@ -618,6 +662,45 @@ class TransactionCards extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class PrimarySwitch extends StatefulWidget {
+  bool switchState;
+  PrimarySwitch({
+    super.key,
+    required this.switchState,
+  });
+
+  @override
+  State<PrimarySwitch> createState() => _PrimarySwitchState();
+}
+
+class _PrimarySwitchState extends State<PrimarySwitch> {
+  bool switchSt = false;
+
+  @override
+  void initState() {
+    super.initState();
+    switchSt = widget.switchState;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      // This bool value toggles the switch.
+      value: switchSt,
+      activeColor: light80,
+      activeTrackColor: violet,
+      inactiveThumbColor: light,
+      inactiveTrackColor: violet20,
+      onChanged: (bool value) {
+        setState(() {
+          switchSt = value;
+        });
+      },
     );
   }
 }
