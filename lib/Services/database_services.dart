@@ -21,8 +21,44 @@ Future<DocumentList?> fetchTransactionsWithUserID(
     final document = await databases.listDocuments(
       databaseId: montraDatabaseID,
       collectionId: transactionCollectionID,
+      queries: [Query.equal('user', userID), Query.orderAsc('datetime')],
+    );
+    return document;
+  } on AppwriteException catch (e) {
+    log('AppwriteException: $e');
+    Fluttertoast.showToast(msg: 'Something went wrong! Please try again!');
+  } catch (e) {
+    log('Exception: $e');
+    Fluttertoast.showToast(msg: 'Something went wrong! Please try again!');
+  }
+  return null;
+}
+
+Future<DocumentList?> fetchFilteredTransactionsWithUserID(
+    {required String userID,
+    required bool isIncome,
+    required bool isExpense,
+    required bool isHighest,
+    required bool isLowest,
+    required bool isNewest,
+    required bool isOldest}) async {
+  try {
+    final document = await databases.listDocuments(
+      databaseId: montraDatabaseID,
+      collectionId: transactionCollectionID,
       queries: [
         Query.equal('user', userID),
+        if (isIncome) Query.equal('transactionType', 'Income'),
+        if (isExpense) Query.equal('transactionType', 'Expense'),
+        if (isHighest) Query.orderDesc('amount'),
+        if (isLowest) Query.orderAsc('amount'),
+        if (isNewest) Query.orderAsc('datetime'),
+        if (isOldest) Query.orderDesc('datetime'),
+        if (isHighest == false &&
+            isLowest == false &&
+            isNewest == false &&
+            isOldest == false)
+          Query.orderAsc('datetime')
       ],
     );
     return document;
@@ -47,13 +83,12 @@ Future<void> createTransaction({
       data: transactionData,
     );
   } on AppwriteException catch (ape) {
-    log(ape.toString());
+    log('APE: $ape');
     Fluttertoast.showToast(msg: 'Something went wrong! Please try again!');
   } catch (e) {
-    log(e.toString());
+    log('Exception: $e');
     Fluttertoast.showToast(msg: 'Something went wrong! Please try again!');
   }
-  return null;
 }
 
 Future<DocumentList?> fetchTransactionsWithWalletID(
@@ -123,6 +158,24 @@ Future<DocumentList?> fetchWallets({required String userID}) async {
       queries: [
         Query.equal('user', userID),
       ],
+    );
+    return document;
+  } on AppwriteException catch (ape) {
+    log(ape.toString());
+    Fluttertoast.showToast(msg: 'Something went wrong! Please try again!');
+  } catch (e) {
+    log(e.toString());
+    Fluttertoast.showToast(msg: 'Something went wrong! Please try again!');
+  }
+  return null;
+}
+
+Future<Document?> fetchSingleWallet({required String walletID}) async {
+  try {
+    final document = await databases.getDocument(
+      databaseId: montraDatabaseID,
+      collectionId: walletCollectionID,
+      documentId: walletID,
     );
     return document;
   } on AppwriteException catch (ape) {

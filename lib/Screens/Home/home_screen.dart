@@ -160,7 +160,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log('Nothing');
     final _lineBarsData = [
       LineChartBarData(
         spots: points.map((point) => FlSpot(point.x, point.y)).toList(),

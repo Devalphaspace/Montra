@@ -81,21 +81,21 @@ TextStyle titlex = GoogleFonts.inter(
   height: 80,
 );
 
-List<String> expenseCategory = [
-  'Category',
-  'Shopping',
-  'Food',
-  'Subscription',
-  'Grocery',
-  'Rent',
-];
+// List<String> expenseCategory = [
+//   'Category',
+//   'Shopping',
+//   'Food',
+//   'Subscription',
+//   'Grocery',
+//   'Rent',
+// ];
 
-List<String> expenseFrom = [
-  'Wallet',
-  'Cash',
-  'Bank Account',
-  'Credit Card',
-];
+// List<String> expenseFrom = [
+//   'Wallet',
+//   'Cash',
+//   'Bank Account',
+//   'Credit Card',
+// ];
 
 List<String> months = [
   'January',

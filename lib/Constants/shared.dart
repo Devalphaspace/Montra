@@ -44,6 +44,85 @@ class _PrimaryElevatedButtonState extends State<PrimaryElevatedButton> {
   }
 }
 
+// ignore: must_be_immutable
+class CustomTextButton extends StatefulWidget {
+  final String buttonName;
+  final double buttonMinWidth;
+  final double buttonMinHeight;
+  final Function()? onPressed;
+  bool isActive;
+  CustomTextButton({
+    super.key,
+    required this.buttonName,
+    required this.buttonMinWidth,
+    required this.buttonMinHeight,
+    required this.onPressed,
+    required this.isActive,
+  });
+
+  @override
+  State<CustomTextButton> createState() => _CustomTextButtonState();
+}
+
+class _CustomTextButtonState extends State<CustomTextButton> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: widget.onPressed,
+      style: TextButton.styleFrom(
+        minimumSize: Size(widget.buttonMinWidth, widget.buttonMinHeight),
+        backgroundColor: widget.isActive ? violet20 : Colors.transparent,
+        side: BorderSide(
+          color: widget.isActive ? Colors.transparent : light40,
+          width: widget.isActive ? 0 : 1,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 0,
+        ),
+      ),
+      child: Text(
+        widget.buttonName,
+        style: body3.copyWith(
+          color: widget.isActive ? violet : dark,
+        ),
+      ),
+    );
+  }
+}
+
+class PrimaryChildWidgetElevatedButton extends StatefulWidget {
+  final Function()? onPressed;
+  final Widget buttonWidget;
+  const PrimaryChildWidgetElevatedButton({
+    super.key,
+    required this.onPressed,
+    required this.buttonWidget,
+  });
+
+  @override
+  State<PrimaryChildWidgetElevatedButton> createState() =>
+      _PrimaryChildWidgetElevatedButtonState();
+}
+
+class _PrimaryChildWidgetElevatedButtonState
+    extends State<PrimaryChildWidgetElevatedButton> {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: widget.onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(Get.width, 56),
+        backgroundColor: violet,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      child: widget.buttonWidget,
+    );
+  }
+}
+
 class PrimaryElevatedIconButton extends StatefulWidget {
   final Function()? onPressed;
   final String buttonName;

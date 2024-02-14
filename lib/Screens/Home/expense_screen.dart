@@ -1,14 +1,16 @@
-import 'dart:developer';
 import 'dart:io';
+import 'dart:developer';
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:montra/Constants/constants.dart';
-import 'package:montra/Controller/income_expense_controller.dart';
 import 'package:montra/Services/database_services.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:montra/Controller/income_expense_controller.dart';
 
 import '../../Constants/shared.dart';
 import '../../Services/image_services.dart';
@@ -27,15 +29,10 @@ class ExpenseScreen extends StatefulWidget {
 class _ExpenseScreenState extends State<ExpenseScreen> {
   TextEditingController numericController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  String categoryvalue = 'Category';
-  String expensevalue = 'Wallet';
   bool switchValue = false;
   File? image;
   IncomeExpenseController expenseController =
       Get.put(IncomeExpenseController());
-  List<String> expenseCategoryList = [
-    'Category',
-  ];
 
   final _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -50,10 +47,23 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       fetchCategories(userID: widget.userID).then((documents) {
         List<String> documentList = [];
+        List<String> documentIDList = [];
         documents!.forEach((element) {
           documentList.add(element.data['categoryName']);
+          documentIDList.add(element.$id.toString());
         });
-        expenseController.addExpenseCategories(categoryList: documentList);
+        expenseController.addIncomeExpenseCategories(
+            categoryList: documentList, categoryIDList: documentIDList);
+      });
+      fetchWallets(userID: widget.userID).then((documents) {
+        List<String> documentList = [];
+        List<String> documentIDList = [];
+        documents!.documents.forEach((element) {
+          documentList.add(element.data['walletName']);
+          documentIDList.add(element.$id.toString());
+        });
+        expenseController.addWalletCategories(
+            walletList: documentList, walletIDList: documentIDList);
       });
     });
   }
@@ -63,7 +73,9 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     return GetBuilder<IncomeExpenseController>(builder: (context) {
       return GestureDetector(
         onTap: () {
-          setState(() {});
+          setState(() {
+            FocusManager.instance.primaryFocus!.unfocus();
+          });
         },
         child: Scaffold(
           backgroundColor: red,
@@ -151,21 +163,23 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         ),
                         child: DropdownButton(
                           // Initial Value
-                          value: expenseController.expenseCategoryValue,
+                          value: expenseController.incomeExpenseCategoryValue,
                           underline: const SizedBox(
                             height: 0,
                             width: 0,
                           ),
                           icon: Padding(
                             padding: EdgeInsets.only(
-                                left: Get.width * 0.525 - categoryvalue.length),
+                                left: Get.width * 0.525 -
+                                    expenseController
+                                        .incomeExpenseCategoryValue.length),
                             child: Icon(
                               Icons.keyboard_arrow_down_rounded,
                               color: light20,
                             ),
                           ),
 
-                          items: expenseController.expenseCategoryList
+                          items: expenseController.incomeExpenseCategoryList
                               .map((String items) {
                             return DropdownMenuItem(
                               value: items,
@@ -180,8 +194,15 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                           }).toList(),
                           onChanged: (String? newValue) {
                             setState(() {
-                              expenseController.changeExpenseCategoryValue(
-                                  categoryValue: newValue!);
+                              expenseController
+                                  .changeIncomeExpenseCategoryValue(
+                                      categoryValue: newValue!,
+                                      categoryID: expenseController
+                                              .incomeExpenseCategoryIDList[
+                                          expenseController
+                                              .incomeExpenseCategoryList
+                                              .indexWhere((element) =>
+                                                  element == newValue)]);
                             });
                           },
                         ),
@@ -209,7 +230,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         ),
                         child: DropdownButton(
                           // Initial Value
-                          value: expensevalue,
+                          value: expenseController.walletCategoryValue,
                           underline: const SizedBox(
                             height: 0,
                             width: 0,
@@ -222,7 +243,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                             ),
                           ),
 
-                          items: expenseFrom.map((String items) {
+                          items: expenseController.walletCategoryList
+                              .map((String items) {
                             return DropdownMenuItem(
                               value: items,
                               child: Text(
@@ -236,7 +258,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                           }).toList(),
                           onChanged: (String? newValue) {
                             setState(() {
-                              expensevalue = newValue!;
+                              expenseController.changeWalletCategoryValue(
+                                  walletValue: newValue!,
+                                  walletID:
+                                      expenseController.walletCategoryIDList[
+                                          expenseController.walletCategoryList
+                                              .indexWhere((element) =>
+                                                  element == newValue)]);
                             });
                           },
                         ),
@@ -280,11 +308,115 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         ],
                       ),
                       const SizedBox(height: 36),
-                      PrimaryElevatedButton(
+                      PrimaryChildWidgetElevatedButton(
                         onPressed: () {
-                          log(expenseCategoryList.toString());
+                          expenseController.buttonLoadingStatusModifier(
+                              buttonStatus: true);
+                          try {
+                            Map<String, dynamic> transactionData = {
+                              'ID': getRandomString(36),
+                              'amount': numericController.text,
+                              'transactionDescription':
+                                  descriptionController.text,
+                              'datetime': DateTime.now().toString(),
+                              'user': widget.userID,
+                              'transactionType': 'Expense',
+                              'wallet': expenseController.walletCategoryIDValue,
+                              'category': expenseController
+                                  .incomeExpenseCategoryIDValue,
+                            };
+                            fetchSingleWallet(
+                                    walletID:
+                                        expenseController.walletCategoryIDValue)
+                                .then((walletDetails) {
+                              try {
+                                log('NUM TEXT: ${numericController.text} ----- NUM PARSE: ${int.parse(numericController.text)}');
+                                double walletAmount =
+                                    walletDetails!.data['walletAmount'];
+                                double deductedAmount = (walletAmount -
+                                    double.parse(numericController.text));
+                                log('DED AMT: $deductedAmount');
+                                updateWallet(
+                                    walletID:
+                                        expenseController.walletCategoryIDValue,
+                                    walletData: {
+                                      "walletAmount": deductedAmount,
+                                    }).then((value) {
+                                  try {
+                                    createTransaction(
+                                            transactionData: transactionData)
+                                        .then((value) {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              'Transaction Created Successfully!');
+                                      Get.back();
+                                    });
+                                  } catch (e) {
+                                    log('createTransactionException: $e');
+                                    updateWallet(
+                                        walletID: expenseController
+                                            .walletCategoryIDValue,
+                                        walletData: {
+                                          "walletAmount": walletAmount,
+                                        });
+                                    primaryFlutterToast(
+                                        msg: 'Something went wrong');
+                                    Get.back();
+                                  }
+                                });
+                              } catch (e) {
+                                log('updateWalletException: $e');
+                                    Get.back();
+                                primaryFlutterToast(
+                                    msg: 'Something went wrong');
+                              }
+                            });
+                          } catch (e) {
+                            Fluttertoast.showToast(
+                                msg: 'Something went wrong! Try again later');
+                            log('fetchSingleWalletException: $e');
+                            expenseController.buttonLoadingStatusModifier(
+                                buttonStatus: false);
+                          }
                         },
-                        buttonName: 'Continue',
+                        buttonWidget: expenseController.isSubmitButtonLoading
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator.adaptive(
+                                    backgroundColor: light80,
+                                  ),
+                                  const Spacer(),
+                                  AnimatedTextKit(
+                                    animatedTexts: [
+                                      TyperAnimatedText(
+                                        'Adding Expense',
+                                        textStyle:
+                                            title3.copyWith(color: light80),
+                                        speed:
+                                            const Duration(milliseconds: 100),
+                                      ),
+                                      TyperAnimatedText(
+                                        'Almont done',
+                                        textStyle:
+                                            title3.copyWith(color: light80),
+                                        speed:
+                                            const Duration(milliseconds: 100),
+                                      ),
+                                    ],
+                                    totalRepeatCount: 1,
+                                    pause: const Duration(milliseconds: 3000),
+                                    displayFullTextOnTap: false,
+                                    stopPauseOnTap: false,
+                                  ),
+                                  const Spacer(),
+                                ],
+                              )
+                            : Text(
+                                'Continue',
+                                style: title3.copyWith(color: light80),
+                              ),
                       ),
                     ],
                   ),

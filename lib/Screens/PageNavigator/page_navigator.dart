@@ -9,6 +9,7 @@ import 'package:montra/Screens/Home/expense_screen.dart';
 import 'package:montra/Screens/Home/home_screen.dart';
 import 'package:montra/Screens/Home/income_screen.dart';
 import 'package:montra/Screens/Profile/profile_screen.dart';
+import 'package:montra/Screens/Transaction/transaction_screen.dart';
 
 class PageNavigator extends StatefulWidget {
   final String userID;
@@ -54,7 +55,7 @@ class _PageNavigatorState extends State<PageNavigator> {
         index: _bottomNavIndex,
         children: [
           HomeScreen(userID: widget.userID),
-          HomeScreen(userID: widget.userID),
+          TransactionScreen(userID: widget.userID),
           HomeScreen(userID: widget.userID),
           ProfileScreen(
             userID: widget.userID,
@@ -140,7 +141,7 @@ class _PageNavigatorState extends State<PageNavigator> {
             visible: true,
             onTap: () => setState(() {
               rmicons = false;
-              Get.to(() => const IncomeScreen());
+              Get.to(() => IncomeScreen(userID: widget.userID,));
             }),
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:montra/Screens/Settings/about.dart';
 import 'package:montra/Screens/Settings/notification.dart';
 import 'package:montra/Screens/Settings/currency.dart';
 import 'package:montra/Screens/Settings/language.dart';
@@ -86,7 +87,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SettingsButtons(
                   buttonName: 'About',
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => AboutScreen());
+                  },
                 ),
                 SettingsButtons(
                   buttonName: 'Help',

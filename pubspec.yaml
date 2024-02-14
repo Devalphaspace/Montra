@@ -54,6 +54,8 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   image_picker: ^1.0.4
   random_avatar: ^0.0.8
+  animated_text_kit: ^4.2.2
+  badges: ^3.1.2
 
 dev_dependencies:
   flutter_test:
