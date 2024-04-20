@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:montra/Constants/constants.dart';
-import 'package:montra/Constants/shared.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});

@@ -32,7 +32,7 @@ class _PageNavigatorState extends State<PageNavigator> {
     Iconsax.user_octagon,
   ];
 
-  int _bottomNavIndex = 1;
+  int _bottomNavIndex = 0;
 
   var renderOverlay = true;
   var visible = true;
